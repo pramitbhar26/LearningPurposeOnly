@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <title>
+        Todo App
+    </title>
+    <script>
+
+        function getAllTodosData(data) {
+            console.log(data);
+            var parseData = document.getElementById("mainArea");
+            // parseData.innerHTML =JSON.stringify(data);
+
+            for(var i=0;i<data.length;i++) {
+                var childElement = document.createElement("div");
+                var childElement1 = document.createElement("spam");
+                var childElement2 = document.createElement("spam");
+                var grandChild = document.createElement("button");
+                childElement1.innerHTML =data[i].title;
+                childElement2.innerHTML =data[i].desc;
+                grandChild.innerHTML ="DELETE";
+                childElement.appendChild(childElement1);
+                childElement.appendChild(childElement2);
+                childElement.appendChild(grandChild);
+                parseData.appendChild(childElement);
+            }
+        }
+        function getCallBackData(resp){
+            resp.json().then(getAllTodosData);
+        }
+        function getData(){
+            fetch("http://localhost:3000/todo",{
+                method:"GET",
+            }).then(getCallBackData);
+        }
+        getData();
+        function parseResponse(data){
+            console.log(data);
+        }
+        function callback(resp) {
+            resp.json().then(parseResponse);
+
+        }
+        function Onpress(){
+            var title = document.getElementById("title1").value;
+            var description = document.getElementById("description").value;
+            fetch("http://localhost:3000/todo",{
+                method:"POST",
+                body:JSON.stringify({
+                    title:title,
+                    description:description
+                }),
+                headers:{"Content-Type": "application/json"
+                }
+            }).then(callback)
+            getData();
+        }
+    </script>
+    <body>
+     <p>Title</p>   
+     <input type="text" id="title1"/>
+     <br>
+     <br>
+     <p>Desc</p>   
+     <input type="text" id="description"/>
+     <br>
+     <button onclick="Onpress()">Send Todo</button>
+     <div id="mainArea">
+
+     </div>
+    </body>
+</html>
